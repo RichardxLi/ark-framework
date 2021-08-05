@@ -1,9 +1,9 @@
 package main
 
 import (
+	"ark-server/src/http"
+	"ark-server/src/tcp"
 	"fmt"
-	"nano-server/src/http"
-	"nano-server/src/tcp"
 )
 
 func main() {

@@ -1,11 +1,12 @@
 package http
 
 import (
+	"ark-server/src/tcp"
 	"encoding/json"
 	"fmt"
 	"io"
-	"nano-server/src/tcp"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -13,11 +14,14 @@ import (
 	uuidGen "github.com/go-basic/uuid"
 )
 
-const MaxGroup = 10    // 最大承载数量
-const PortStart = 3250 // TCP端口起始分配值
+const MaxGroup = 10     // 最大群组数
+const MaxAccount = 100  // 最大用户数
+const PortStart = 13250 // TCP端口起始分配值
 
 var GroupList [MaxGroup]*groupSlot // 群组列表
 var GLock sync.RWMutex             // 群组读写锁
+var AccountMap sync.Map            // 账号信息表
+var accountNum = 0
 
 func init() {
 	for i := 0; i < MaxGroup; i++ {
@@ -29,14 +33,19 @@ func init() {
 	checkHeartbeat()
 }
 
+type accountInfo struct {
+	Name   string `json:""`
+	Passwd string `json:""`
+}
+
 type groupSlot struct {
-	GUid     string    `json:"guid"` // 组识别号 全局唯一
-	Name     string    `json:"name"` // 名称
-	Port     int       `json:"port"` // TCP服务器端口
-	HostUUid string    `json:"-"`    // 主机UUID
-	LastHb   time.Time `json:"-"`    // 上一次心跳
-	Busy     bool      `json:"-"`    // 使用中
-	Running  bool      `json:"-"`
+	GUid     string    `json:"guid"`  // 组识别号 全局唯一
+	Name     string    `json:"name"`  // 名称
+	Port     int       `json:"-"`     // TCP服务器端口
+	HostUUid string    `json:"-"`     // 主机UUID
+	LastHb   time.Time `json:"-"`     // 上一次心跳
+	Busy     bool      `json:"-"`     // 使用中
+	State    int       `json:"state"` // 状态
 }
 
 // 获取一个闲置群组
@@ -89,6 +98,8 @@ func (s *registerServer) router() {
 	s.mux.HandleFunc("/group/free", freeHandler)
 	s.mux.HandleFunc("/group/list", listHandler)
 	s.mux.HandleFunc("/group/heartbeat", heartbeatHandler)
+	s.mux.HandleFunc("/group/set", setHandler)
+	s.mux.HandleFunc("/account/login", loginHandler)
 }
 
 //helloHandler
@@ -130,6 +141,7 @@ func createHandler(w http.ResponseWriter, req *http.Request) {
 	g := idleGroup()
 	if g == nil {
 		rsp.Code = 201 // 201-已达上限
+		GLock.Unlock()
 		sendRsp(w, rsp)
 		return
 	}
@@ -146,6 +158,7 @@ func createHandler(w http.ResponseWriter, req *http.Request) {
 	g.HostUUid = uuid
 	g.LastHb = time.Now()
 	g.Busy = true
+	g.State = 0
 	GLock.Unlock()
 	tcp.StartChan <- g.Port // 启动TCP服务
 	fmt.Printf("新群组建立 GUID:%s\n", guid)
@@ -225,9 +238,9 @@ func listHandler(w http.ResponseWriter, req *http.Request) {
 			continue
 		}
 		g := groupSlot{
-			GUid: v.GUid,
-			Name: v.Name,
-			Port: v.Port,
+			GUid:  v.GUid,
+			Name:  v.Name,
+			State: v.State,
 		}
 		rsp.List = append(rsp.List, g)
 	}
@@ -237,7 +250,7 @@ func listHandler(w http.ResponseWriter, req *http.Request) {
 
 //heartbeatHandler
 //群组心跳 仅主机请求
-//@request guid 用户识别号
+//@request guid 群组编号
 func heartbeatHandler(w http.ResponseWriter, req *http.Request) {
 	// 回包
 	type response struct {
@@ -260,6 +273,75 @@ func heartbeatHandler(w http.ResponseWriter, req *http.Request) {
 	}
 	GLock.Unlock()
 	sendRsp(w, rsp)
+}
+
+//setHandler
+//参数设置
+//@request guid 群组编号
+//@request state 状态值
+func setHandler(w http.ResponseWriter, req *http.Request) {
+	// 入参
+	guid := strings.TrimSpace(req.FormValue("guid"))
+	if guid == "" {
+		return
+	}
+	state, err := strconv.Atoi(req.FormValue("state"))
+	if err != nil {
+		return
+	}
+	GLock.Lock()
+	g := getByGUid(guid)
+	if g != nil {
+		g.State = state
+	}
+	GLock.Unlock()
+}
+
+//loginHandler
+//登录
+//@request name 用户名
+//@request passwd 密码
+func loginHandler(w http.ResponseWriter, req *http.Request) {
+	// 回包
+	type response struct {
+		Code int `json:"code"` // 100-成功
+	}
+	var rsp = &response{Code: 100}
+
+	// 入参
+	name := strings.TrimSpace(req.FormValue("name"))
+	if name == "" {
+		rsp.Code = 901 // 参数异常
+		sendRsp(w, rsp)
+		return
+	}
+	passwd := strings.TrimSpace(req.FormValue("passwd"))
+	if passwd == "" {
+		rsp.Code = 901 // 参数异常
+		sendRsp(w, rsp)
+		return
+	}
+
+	account := accountInfo{Name: name, Passwd: passwd}
+	v, ok := AccountMap.LoadOrStore(name, account)
+	if ok {
+		// 用户已存在
+		if v.(accountInfo).Passwd != passwd {
+			rsp.Code = 201 // 201 - 密码错误
+			sendRsp(w, rsp)
+			return
+		}
+	} else {
+		// 用户不存在
+		if accountNum >= MaxAccount {
+			rsp.Code = 203 // 203 - 已达上限
+			sendRsp(w, rsp)
+			return
+		}
+		accountNum++
+	}
+	sendRsp(w, rsp)
+	return
 }
 
 //回包

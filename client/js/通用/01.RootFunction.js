@@ -58,6 +58,7 @@ RF.DefaultBitmap = function() {
  */ 
 RF.LoadDatabase = function() {
     RD.LoadObjects();
+    RD.LoadCards();
 };
 
 /**
@@ -67,6 +68,7 @@ RF.InitGameData = function() {
     RV.GameData.User = new GameUser();
     RV.GameData.Lobby = new GameLobby();
     RV.GameData.Room = new GameRoom();
+    RV.GameData.Cards = new GameCards();
 };
 
 /**

@@ -69,6 +69,7 @@ RF.InitGameData = function() {
     RV.GameData.Lobby = new GameLobby();
     RV.GameData.Room = new GameRoom();
     RV.GameData.Cards = new GameCards();
+    RV.GameData.Players = new GamePlayers();
 };
 
 /**

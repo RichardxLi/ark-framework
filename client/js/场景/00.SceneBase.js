@@ -61,10 +61,4 @@ SceneBase.prototype.goto = function(scene, transform=true) {
 };
 
 // 网络消息
-SceneBase.prototype.netHandler = function(router, data) {
-    log(">>>socket>>>")
-    log("router:"+router)
-    log("data:")
-    log(obj)
-    log("<<<<<<<<<")
-};
+SceneBase.prototype.netHandler = function(router, data) {};

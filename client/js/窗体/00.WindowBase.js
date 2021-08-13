@@ -76,15 +76,15 @@ WindowBase.prototype.update = function(){
 };
 
 WindowBase.prototype.updateWindow = function(){
-    if(this._window == null) return
+    if(this._window == null) return;
     this._window.width = this.width;
     this._window.height = this.height;
-    this._window.x = this.x
-    this._window.y = this.y
+    this._window.x = this.x;
+    this._window.y = this.y;
  };
 
 WindowBase.prototype.updateViewport = function(){
-    if(this._viewport == null) return
+    if(this._viewport == null) return;
     this._viewport.width = this.contentWidth();
     this._viewport.height = this.contentHeight();
     this._viewport.x = this.x + this.standardPadding;
@@ -93,15 +93,15 @@ WindowBase.prototype.updateViewport = function(){
 //---------------------------------
 // 长度计算
 WindowBase.prototype.contentWidth = function() {
-    return this.width - 2 * this.standardPadding
+    return this.width - 2 * this.standardPadding;
 };
 
 WindowBase.prototype.contentHeight = function() {
-    return this.height - 2 * this.standardPadding
+    return this.height - 2 * this.standardPadding;
 };
 
 WindowBase.prototype.fittingHeight = function(lineNum) {
-    return lineNum * this.fontSize + this.standardPadding * 2
+    return lineNum * this.fontSize + this.standardPadding * 2;
 };
 //---------------------------------
 // 基础操作

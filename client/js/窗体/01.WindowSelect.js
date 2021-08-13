@@ -20,7 +20,7 @@ WindowSelect.prototype.constructor = WindowSelect;
 // 初始化
 WindowSelect.prototype.init = function(noWindow=false) {
     WBase.prototype.init.call(this, noWindow);
-    this.createButtons()
+    this.createButtons();
 };
 
 WindowSelect.prototype.createButtons = function() {
@@ -35,7 +35,7 @@ WindowSelect.prototype.dispose = function(){
 // 主循环
 WindowSelect.prototype.update = function(){
     WBase.prototype.update.call(this);
-    if(this.active==false) return
+    if(this.active==false) return;
     this.mouseUpdate();
     this.keyboardUpdate();
     this.updateIndex();
@@ -45,7 +45,7 @@ WindowSelect.prototype.update = function(){
 // 鼠标
 WindowSelect.prototype.mouseUpdate = function(){
     if(this._index==-1 || !this.mouseEnable) {
-        return
+        return;
     }
     for (var i=0; i<this._buttons.length;i++) {
         if(this._buttons[i].isSelected() && i+1!=this._index) {
@@ -64,7 +64,7 @@ WindowSelect.prototype.mouseUpdate = function(){
 // 键盘
 WindowSelect.prototype.keyboardUpdate = function(){
     if(this._index==-1 || !this.keyboardEnable) {
-        return
+        return;
     }
     if((this.keyboardMode==1 && IInput.isKeyDown(RC.Key.down)) ||
         this.keyboardMode==2 && IInput.isKeyDown(RC.Key.right)) {
@@ -87,35 +87,35 @@ WindowSelect.prototype.keyboardUpdate = function(){
 // 刷新选中框
 WindowSelect.prototype.updateIndex = function(){
     if(this._index==this._lastIndex) {
-        return
+        return;
     }
     if(this._lastIndex==-1) {
          for (var i=0; i<this._buttons.length;i++) {
-            this.buttonUnfocus(i+1)
+            this._buttonUnfocus(i+1);
          }
     } else {
-        this.buttonUnfocus(this._lastIndex)
+        this._buttonUnfocus(this._lastIndex);
     }
     if(this._index==-1) {
          for (var i=0; i<this._buttons.length;i++) {
-            this.buttonFocus(i+1)
+            this._buttonFocus(i+1);
          }
     } else {
-        this.buttonFocus(this._index)
+        this._buttonFocus(this._index);
     }
-    this._lastIndex=this._index
+    this._lastIndex=this._index;
 };
 //---------------------------------
 // 按钮操作
-WindowSelect.prototype.buttonFocus = function(index) {
+WindowSelect.prototype._buttonFocus = function(index) {
     if(index<=0) {
-        return
+        return;
     }
 };
 
-WindowSelect.prototype.buttonUnfocus = function(index) {
+WindowSelect.prototype._buttonUnfocus = function(index) {
     if(index<=0) {
-        return
+        return;
     }
 };
 

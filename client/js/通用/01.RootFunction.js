@@ -47,9 +47,9 @@ RF.LoadCache = function(path,func,tag){
  */ 
 RF.DefaultBitmap = function() {
     if(RV.Cache.Default==null) {
-        RV.Default = new IBitmap.CBitmap(1,1);
+        RV.Cache.Default = new IBitmap.CBitmap(1,1);
     }
-    return RV.Default;
+    return RV.Cache.Default;
 };
 
 
@@ -92,6 +92,6 @@ RF.intervalRecursion = function(code, sec, id) {
 
 RF.ClearInterval = function(id) {
     if(RF.IntervalSprite[id] != null) {
-        RF.IntervalSprite[id].dispose();
+        RF.IntervalSprite[id].disposeMin();
     }
 };

@@ -6,6 +6,7 @@
 function SpriteObject(viewport, object) {
     ISprite.call(this, RF.DefaultBitmap(), viewport);
     var _object = object; // <GameObject>
+    var _isLoad = false;
 
     // 精灵绑定数据
     if(_object != null) {

@@ -115,6 +115,7 @@ WindowBase.prototype.open = function() {
         this._viewport.opacity = 0 ;
         this._viewport.visible = true;
     }
+    var w = this._window;
     if(!this._noWindow) {
         this._window.fadeTo(1, 6);
         this._window.setOnEndFade(function(){

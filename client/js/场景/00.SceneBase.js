@@ -36,13 +36,14 @@ SceneBase.prototype.update = function() {
 SceneBase.prototype.init = function() {
     // 设置背景
     this.background = new ISprite(IVal.GWidth, IVal.GHeight, IColor.White());
-    this.background.z = 1000;
+    this.background.z = 100;
     return true;
 };
 
 // 析构 - 释放资源
 SceneBase.prototype.dispose = function(transform=true) {
     if(transform) {
+        this.background.z = 99999;
         this.background.fadeTo(0,40);
         var __bg = this.background;
         this.background.setOnEndFade(function(){

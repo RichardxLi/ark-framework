@@ -74,7 +74,7 @@ SceneLobby.prototype.initSprite = function() {
     this.spritesetRoom = new SpritesetLobbyRoom(this.view1, RV.GameData.Lobby);
 };
 
-
+// 析构
 SceneLobby.prototype.dispose = function() {
     SceneBase.prototype.dispose.call(this);
     if(this.spriteRefresh != null) this.spriteRefresh.dispose();

@@ -4,7 +4,7 @@
 * this._buttons 在子类中具体实现
 */ 
 function WindowSelect(x, y, width, height) {
-    // 继承 WBase
+    // 继承 WindowBase
     WindowBase.call(this, x, y, width, height);
     this.keyboardEnable = true; // 键盘可用
     this.mouseEnable = true; // 鼠标可用
@@ -19,7 +19,7 @@ WindowSelect.prototype.constructor = WindowSelect;
 //================================
 // 初始化
 WindowSelect.prototype.init = function(noWindow=false) {
-    WBase.prototype.init.call(this, noWindow);
+    WindowBase.prototype.init.call(this, noWindow);
     this.createButtons();
 };
 
@@ -29,12 +29,12 @@ WindowSelect.prototype.createButtons = function() {
 //---------------------------------
 // 析构
 WindowSelect.prototype.dispose = function(){
-    WBase.prototype.dispose.call(this);
+    WindowBase.prototype.dispose.call(this);
 };
 //---------------------------------
 // 主循环
 WindowSelect.prototype.update = function(){
-    WBase.prototype.update.call(this);
+    WindowBase.prototype.update.call(this);
     if(this.active==false) return;
     this.mouseUpdate();
     this.keyboardUpdate();
@@ -111,15 +111,17 @@ WindowSelect.prototype._buttonFocus = function(index) {
     if(index<=0) {
         return;
     }
+    this._buttons[index-1].doFocus();
 };
 
 WindowSelect.prototype._buttonUnfocus = function(index) {
     if(index<=0) {
         return;
     }
+    this._buttons[index-1].doUnfocus();
 };
 
-WindowSelect.prototype.reset = function(index) {
+WindowSelect.prototype.reset = function() {
     this._index = 0;
     this.updateIndex();
 }
@@ -137,5 +139,5 @@ WindowSelect.prototype.clear = function() {
         }
     }
     this._buttons = [];
-    WBase.prototype.clear.call(this);
+    WindowBase.prototype.clear.call(this);
 }

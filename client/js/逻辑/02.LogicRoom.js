@@ -18,7 +18,7 @@ function LogicRoomHost() {
 
 	// 开始游戏
 	this.start = function() {
-		//todo
+		IVal.scene.goto(new SceneMain());
 	};
 
 	// 玩家加入处理

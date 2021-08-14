@@ -5,12 +5,15 @@
 function WindowBase(x, y, width, height){
     this.x = x;
     this.y = y;
+    this.z = 1000;
     this.width = width;
     this.height = height;
     this.standardPadding = 24;
     this.fontSize = 32;
     this.active = false;
 
+    // 背景色
+    this._colorBackgroud = new IColor(0,0,0,180);
     // 窗口精灵
     this._window = null;
     // 主视窗
@@ -19,7 +22,7 @@ function WindowBase(x, y, width, height){
     this._content = null; 
     // 无窗口模式
     this._noWindow = false;
-}
+};
 //---------------------------------
 // 初始化
 WindowBase.prototype.init = function(noWindow=false) {
@@ -31,21 +34,20 @@ WindowBase.prototype.init = function(noWindow=false) {
 
 WindowBase.prototype.createWindow = function(noWindow){
     if(this._window!=null) this._window.dispose();
-    this._window = new ISprite(this.width, this.height, new IColor(0,0,0,180));
+    this._window = new ISprite(this.width, this.height, this._colorBackgroud);
     this._window.x = this.x;
     this._window.y = this.y;
-    this._window.z = 1000;
+    this._window.z = this.z;
     if(noWindow) {
         this._window.opacity = 0;
     }
 };
 
 WindowBase.prototype.createViewport = function(){
-    if(this._viewport!=null) this._viewport.dispose();
     this._viewport = new IViewport(0, 0, this.contentWidth(), this.contentHeight());
     this._viewport.x = this.x + this.standardPadding;
     this._viewport.y = this.y + this.standardPadding;
-    this._viewport.z = 10000;
+    this._viewport.z = this.z+1;
 };
 
 WindowBase.prototype.createContent = function(){
@@ -57,13 +59,12 @@ WindowBase.prototype.createContent = function(){
         bitmap = new IBitmap.CBitmap(1, 1)
     }
     this._content = new ISprite(bitmap, this._viewport);
-    this._content.z = 1100;
+    this._content.z = 1;
 };
 //---------------------------------
 // 析构
 WindowBase.prototype.dispose = function(){
     if(this._window != null) this._window.dispose();
-    if(this._viewport != null) this._content.dispose();
     if(this._content != null) this._content.dispose();
     if(this.endDo != null) this.endDo();
 };
@@ -116,8 +117,14 @@ WindowBase.prototype.open = function() {
     }
     if(!this._noWindow) {
         this._window.fadeTo(1, 6);
+        this._window.setOnEndFade(function(){
+            w.visible = true;
+        });
     }
     this._viewport.fadeTo(1, 6);
+    this._viewport.setOnEndFade(function(){
+        v.visible = true;
+    });
 };
 
 WindowBase.prototype.close = function() {
@@ -137,12 +144,13 @@ WindowBase.prototype.close = function() {
 WindowBase.prototype.hide = function() {
     this._window.visible = false;
     this._viewport.visible = false;
+    this.active = false;
 };
 
 WindowBase.prototype.show = function() {
     this._window.visible = true;
     this._viewport.visible = true;
-    this.active = false;
+    
 };
 //---------------------------------
 // 文本操作

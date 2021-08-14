@@ -74,6 +74,7 @@ SceneRoom.prototype.initSprite = function() {
     this.spritesetPlayer = new SpritesetRoomPlayer(this.view1, RV.GameData.Room);
 };
 
+// 析构
 SceneRoom.prototype.dispose = function() {
     SceneBase.prototype.dispose.call(this);
     if(this.spriteStart != null) this.spriteStart.dispose();
@@ -81,6 +82,7 @@ SceneRoom.prototype.dispose = function() {
     if(this.spritesetPlayer != null) this.spritesetPlayer.dispose();
 };
 
+// 网络消息
 SceneRoom.prototype.netHandler = function(router, data) {
     if(router==Protocol.Tcp.RoomJoin) {
         this.logic.joinHandler(data);
@@ -92,6 +94,14 @@ SceneRoom.prototype.netHandler = function(router, data) {
     }
     if(router==Protocol.Tcp.RoomInfo) {
         this.logic.infoHandler(data);
+        return;
+    }
+    if(router==Protocol.Tcp.RoomClose) {
+        this.logic.closeHandler(data);
+        return;
+    }
+    if(router==Protocol.Tcp.Rejoin) {
+        this.logic.rejoinHandler(data);
         return;
     }
 };

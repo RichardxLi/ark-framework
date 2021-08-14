@@ -20,3 +20,11 @@ RV.Cache.Default =  null;
 
 // 游戏数据
 RV.GameData = {};
+
+// 标签
+RV.Label = {};
+RV.Label.Duke = "DUKE";
+RV.Label.Assassin = "ASS";
+RV.Label.Countess = "CTS";
+RV.Label.Ambassador = "AMB";
+RV.Label.Captain = "CAP";

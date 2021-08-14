@@ -23,4 +23,6 @@
 *     _开头为私有成员，字母开头为公共成员
 *     __开头为临时定义
 * 
+* IFAction API：
+*     http://www.cedong.com.cn/document/
 */

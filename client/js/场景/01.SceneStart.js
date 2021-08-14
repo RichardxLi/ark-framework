@@ -51,10 +51,19 @@ SceneStart.prototype.update = function() {
         this.logo.fadeTo(1, 60);
         var __logo = this.logo;
         this.logo.setOnEndFade(function(){
-            __logo.fadeTo(0.01,80)
+            __logo.fadeTo(0.01,80);
             __logo.setOnEndFade(function(){
-                IVal.scene.goto(new SceneLogin())
+                if(IVal.DEBUG) {
+                    SceneStart.__debugGo();
+                } else {
+                    IVal.scene.goto(new SceneLogin());
+                }
             })
         });
     }
+};
+
+// 调试用
+SceneStart.__debugGo = function() {
+    IVal.scene.goto(new SceneMain());
 };

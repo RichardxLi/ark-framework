@@ -10,7 +10,7 @@ function SpriteButton(viewport, txt) {
     var _title = txt;
 
     // 刷新
-    this.updateFrame = function() {
+    this.frameUpdate = function() {
         this.drawTitleQ(_title, IColor.Black(), 32);
     };
 

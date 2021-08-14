@@ -115,13 +115,14 @@ WindowBase.prototype.open = function() {
         this._viewport.opacity = 0 ;
         this._viewport.visible = true;
     }
-    var w = this._window;
     if(!this._noWindow) {
+        var w = this._window;
         this._window.fadeTo(1, 6);
         this._window.setOnEndFade(function(){
             w.visible = true;
         });
     }
+    var v = this._viewport;
     this._viewport.fadeTo(1, 6);
     this._viewport.setOnEndFade(function(){
         v.visible = true;

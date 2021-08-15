@@ -193,7 +193,7 @@ WindowBase.prototype._processNormalCharacter = function(c, pos, color) {
 
 WindowBase.prototype._processNormalLine = function(text, pos) {
     pos.x  = pos.new_x;
-    pos.y =  pos.lineHeight;
+    pos.y += pos.lineHeight;
     pos.lineHeight = IFont.getHeight(text,this.fontSize);
 };
 

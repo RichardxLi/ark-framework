@@ -22,6 +22,8 @@ function WindowBase(x, y, width, height){
     this._content = null; 
     // 无窗口模式
     this._noWindow = false;
+
+    this.__waitFrame = 0;
 };
 //---------------------------------
 // 初始化
@@ -59,21 +61,18 @@ WindowBase.prototype.createContent = function(){
         bitmap = new IBitmap.CBitmap(1, 1)
     }
     this._content = new ISprite(bitmap, this._viewport);
-    this._content.z = 1;
 };
 //---------------------------------
 // 析构
 WindowBase.prototype.dispose = function(){
     if(this._window != null) this._window.dispose();
     if(this._content != null) this._content.dispose();
-    if(this.endDo != null) this.endDo();
 };
 //---------------------------------
 // 主循环
 WindowBase.prototype.update = function(){
     this.updateWindow();
     this.updateViewport();
-    return true;
 };
 
 WindowBase.prototype.updateWindow = function(){
@@ -115,17 +114,16 @@ WindowBase.prototype.open = function() {
         this._viewport.opacity = 0 ;
         this._viewport.visible = true;
     }
+    var w = this._window;
     if(!this._noWindow) {
-        var w = this._window;
         this._window.fadeTo(1, 6);
         this._window.setOnEndFade(function(){
             w.visible = true;
         });
     }
-    var v = this._viewport;
     this._viewport.fadeTo(1, 6);
     this._viewport.setOnEndFade(function(){
-        v.visible = true;
+        w.visible = true;
     });
 };
 
@@ -181,6 +179,9 @@ WindowBase.prototype._processCharacter = function(c, pos, text, color) {
         case '\f': //  new page
             this._processNormalPage(text, pos);
             break;
+        case '\w': // ...
+            this._processWaitCharacter(pos, color);
+            break;
         default:
             this._processNormalCharacter(c, pos, color);
     }
@@ -193,11 +194,29 @@ WindowBase.prototype._processNormalCharacter = function(c, pos, color) {
 
 WindowBase.prototype._processNormalLine = function(text, pos) {
     pos.x  = pos.new_x;
-    pos.y =  pos.lineHeight;
+    pos.y = pos.y + pos.lineHeight;
     pos.lineHeight = IFont.getHeight(text,this.fontSize);
 };
 
-WindowBase.prototype._processNormalPage = function(text, pos) {};
+WindowBase.prototype._processNormalPage = function(text, pos) {
+    this.drawText(c, pos.x, pos.y, color);
+    pos.x += IFont.getWidth(c, this.fontSize)
+};
+
+WindowBase.prototype._processWaitCharacter = function(pos, color) {
+    var c = "";
+    if(this.__waitFrame / 60 < 1) {
+        c = ".";
+    } else if (this.__waitFrame / 60 < 2){
+        c = "..";
+    } else{
+        c = "...";
+    }
+    this.__waitFrame++;
+    if(this.__waitFrame >= 180) this.__waitFrame = 0;
+    this.drawText(c, pos.x, pos.y, color);
+    pos.x += IFont.getWidth(c, this.fontSize)
+};
 //---------------------------------
 // 清空
 WindowBase.prototype.clear = function() {

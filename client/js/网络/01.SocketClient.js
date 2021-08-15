@@ -78,6 +78,7 @@ function SocketClient() {
         if(obj.code != Protocol.Http.OK) return false;
         this.guid = obj.guid;
         this.isHost = true;
+        this.hostUUid = this.uuid;
         this.dialTcp(RV.System.ServerIp, obj.port);
         this.stopHeartbeat();
         this.hbId = RF.SetInterval(heartbeat, 15);
@@ -121,6 +122,7 @@ function SocketClient() {
         if(obj==null) return false;
         if(obj.code != Protocol.Http.OK) return false;
         this.guid = guid;
+        this.hostUUid = obj.host;
         this.dialTcp(RV.System.ServerIp, obj.port);
         if(obj.host==this.uuid) {
             // 主机连回
@@ -130,7 +132,6 @@ function SocketClient() {
             this.hbId = RF.SetInterval(heartbeat, 15);
         } else {
             this.isHost = false;
-            this.hostUUid = obj.host;
         }
         return true;
     };

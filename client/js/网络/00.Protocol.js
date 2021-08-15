@@ -16,9 +16,14 @@ Protocol.Http.OK = 100;
 
 // TCP路由
 Protocol.Tcp = {};
-Protocol.Tcp.RoomJoin = "room.join"
-Protocol.Tcp.RoomLeave = "room.leave"
-Protocol.Tcp.RoomInfo = "room.info"
-Protocol.Tcp.RoomRejoin = "room.rejoin"
-Protocol.Tcp.RoomClose = "room.close"
+Protocol.Tcp.RoomJoin = "room.join";
+Protocol.Tcp.RoomLeave = "room.leave";
+Protocol.Tcp.RoomInfo = "room.info";
+Protocol.Tcp.RoomRejoin = "room.rejoin";
+Protocol.Tcp.RoomClose = "room.close";
+Protocol.Tcp.RoomStart = "room.start";
+Protocol.Tcp.MainSetReq = "main.gameset";
+Protocol.Tcp.MainSetRsp = "handler.gameset";
+Protocol.Tcp.MainCommand = "main.command";
+Protocol.Tcp.MainDo01 = "handler.do01";
 

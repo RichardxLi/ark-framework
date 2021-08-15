@@ -43,7 +43,7 @@ SceneLogin.prototype.update = function() {
 // 精灵初始化
 SceneLogin.prototype.initSprite = function() {
 	// 背景
-	this.background.drawTextQ("政变-美利坚",800,200,IColor.Red(),72);
+	this.background.drawTextQ("政变 美利坚",800,200,IColor.Red(),72);
 	this.background.drawTextQ("输入昵称",550,400,IColor.Blue(),42);
 
 	// 用户名输入框

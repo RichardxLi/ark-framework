@@ -100,8 +100,12 @@ SceneRoom.prototype.netHandler = function(router, data) {
         this.logic.closeHandler(data);
         return;
     }
-    if(router==Protocol.Tcp.Rejoin) {
+    if(router==Protocol.Tcp.RoomRejoin) {
         this.logic.rejoinHandler(data);
+        return;
+    }
+    if(router==Protocol.Tcp.RoomStart) {
+        this.logic.startHandler(data);
         return;
     }
 };

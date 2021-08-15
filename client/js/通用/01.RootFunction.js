@@ -6,21 +6,23 @@ function RF(){}
 /**
  * 读取图片
  * @param path 图片地址
+ * @param base 根路径
  */
-RF.LoadBitmap = function(path){
-    return IBitmap.WBitmap("Graphics/Picture/" + path);
+RF.LoadBitmap = function(path, base="Picture"){
+    return IBitmap.WBitmap("Graphics/"+ base + "/" + path);
 };
 
 /**
  * 读取缓存
  * @param path 图片地址
+ * @param base 根路径
  * @param func 读取完毕后回调
  * @param tag 读取过程中tag
  * @returns {*} 缓存中图片
  */
-RF.LoadCache = function(path,func,tag){
+RF.LoadCache = function(path, base="Picture", func=null, tag=null){
     if(RV.Cache.Picture[path] == null){
-        RV.Cache.Picture[path] = RF.LoadBitmap(path);
+        RV.Cache.Picture[path] = RF.LoadBitmap(path, base);
         RV.Cache.Picture[path].loadTexture();
         if(RV.Cache.Picture[path].complete){
             if(func != null) func(RV.Cache.Picture[path],tag)

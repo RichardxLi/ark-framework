@@ -17,13 +17,14 @@ function GameCard(dataId) {
     this.bPicture = this.data.bPicture; // 背面图
     this.dPicture = this.data.dPicture; // 死亡图
     this.hint = false; // 高亮
-    this.faceUp = false; // 正面
+    this.face = false; // 正面
+    this.show = false; // 公开
     this.die = false; // 死亡
     this.inAnimation = false; // 动画处理中
 
     this.picture = function() {
         if(this.die) return this.dPicture;
-        if(this.faceUp) return this.fPicture;
+        if(this.face || this.show) return this.fPicture;
         return this.bPicture;
     };
 };

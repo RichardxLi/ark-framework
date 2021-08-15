@@ -57,10 +57,12 @@ function GamePlayers() {
           return this._players[index-1];
      };
 
+     // 玩家数
      this.total = function() {
           return this._players.length;
      };
 
+     // 初始化
      this.init = function() {
           this._players = [];
           for(var i=0; i<RV.GameData.Room.players.length; i++) {
@@ -70,5 +72,33 @@ function GamePlayers() {
                p.gold = 2;
                this._players[i] = p;
           }
+     };;
+
+     // 洗牌
+     // @param order 指定顺序
+     this.shuffle = function(order=[]) {
+          if(order.length==0) {
+               return;
+          }
+          var __new = [];
+          for(var i=0; i<order.length; i++) {
+               __new[i] = this._players[order[i]];
+          }
+          this._players = __new;
+          for(var i=0; i<this._players.length; i++) {
+               this._players[i].index = i+1;
+          }
      };
+
+     // 政变提示
+     this.coupHint = function() {
+          for(var i=0; i<this._players.length; i++) {
+               if(this._players[i].isSelf()) continue;
+               if(!this._players[i].hand(0).die) this._players[i].hand(0).hint = true;
+               if(!this._players[i].hand(1).die) this._players[i].hand(1).hint = true;
+          }
+     };
+
+     // 挑战提示
+
 };

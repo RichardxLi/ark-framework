@@ -53,17 +53,8 @@ SceneStart.prototype.update = function() {
         this.logo.setOnEndFade(function(){
             __logo.fadeTo(0.01,80);
             __logo.setOnEndFade(function(){
-                if(IVal.DEBUG) {
-                    SceneStart.__debugGo();
-                } else {
-                    IVal.scene.goto(new SceneLogin());
-                }
+                IVal.scene.goto(new SceneLogin());
             })
         });
     }
-};
-
-// 调试用
-SceneStart.__debugGo = function() {
-    IVal.scene.goto(new SceneMain());
 };

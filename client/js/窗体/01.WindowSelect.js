@@ -6,7 +6,7 @@
 function WindowSelect(x, y, width, height) {
     // 继承 WindowBase
     WindowBase.call(this, x, y, width, height);
-    this.keyboardEnable = true; // 键盘可用
+    this.keyboardEnable = false; // 键盘可用
     this.mouseEnable = true; // 鼠标可用
     this.keyboardMode = 1; // 按键模式 1-上下 2-左右
 
@@ -39,7 +39,6 @@ WindowSelect.prototype.update = function(){
     this.mouseUpdate();
     this.keyboardUpdate();
     this.updateIndex();
-    return true;
 };
 
 // 鼠标
@@ -124,7 +123,15 @@ WindowSelect.prototype._buttonUnfocus = function(index) {
 WindowSelect.prototype.reset = function() {
     this._index = 0;
     this.updateIndex();
-}
+};
+
+WindowSelect.prototype.set = function(index) {
+    if(index<=0) {
+        return;
+    }
+    this._index = index;
+    this.updateIndex();
+};
 //---------------------------------
 // 事件处理
 WindowSelect.prototype._processOK = function() {};
@@ -140,4 +147,4 @@ WindowSelect.prototype.clear = function() {
     }
     this._buttons = [];
     WindowBase.prototype.clear.call(this);
-}
+};

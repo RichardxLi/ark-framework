@@ -4,8 +4,8 @@
  * @param txt       文本
  */
 function SpriteButton(viewport, txt) {
-    var _bmp1 = RF.LoadCache("../System/button-menu_0.png");
-    var _bmp2 = RF.LoadCache("../System/button-menu_1.png");
+    var _bmp1 = RF.LoadCache("button-menu_0.png", "System");
+    var _bmp2 = RF.LoadCache("button-menu_1.png", "System");
     IButton.call(this, _bmp1, _bmp2, " ", viewport, false);
     var _title = txt;
 

@@ -30,4 +30,8 @@ function SpriteCard(viewport, card) {
     this.setCard = function(card) {
         _card = card;
     };
+
+    this.cardIndex = function() {
+        return _card.index;
+    };
 };

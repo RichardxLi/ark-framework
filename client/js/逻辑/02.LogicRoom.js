@@ -19,6 +19,7 @@ function LogicRoomHost() {
 	// 开始游戏
 	this.start = function() {
 		IVal.scene.goto(new SceneMain());
+		ISocketClient.sendGroup(Protocol.Tcp.RoomStart, TcpMessage.RoomStart());
 	};
 
 	// 玩家加入处理
@@ -44,6 +45,7 @@ function LogicRoomHost() {
 	this.infoHandler = function(data) {};
 	this.closeHandler = function(data) {};
 	this.rejoinHandler = function(data) {};
+	this.startHandler = function(data) {};
 };
 
 
@@ -93,6 +95,11 @@ function LogicRoomGuest() {
 		var data = TcpMessage.RoomJoin();
 		data.name = RV.GameData.User.name;
 		ISocketClient.sendHost(Protocol.Tcp.RoomJoin, data);
+	};
+
+	// 开始游戏
+	this.startHandler = function(data) {
+		IVal.scene.goto(new SceneMain());
 	};
 
 	// 以下仅声明

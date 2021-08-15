@@ -22,9 +22,20 @@ RV.Cache.Default =  null;
 RV.GameData = {};
 
 // 标签
-RV.Label = {};
-RV.Label.Duke = "DUKE";
-RV.Label.Assassin = "ASS";
-RV.Label.Countess = "CTS";
-RV.Label.Ambassador = "AMB";
-RV.Label.Captain = "CAP";
+RV.Label = {
+    Duke        : "DUKE",
+    Assassin    : "ASS",
+    Countess    : "CTS",
+    Ambassador  : "AMB",
+    Captain     : "CAP"
+};
+
+// 状态机
+RV.State = {};
+RV.State.GameInit = 1;
+RV.State.GameSet = 2;
+RV.State.TurnInit = 3;
+RV.State.CommandSelect = 4;
+RV.State.CommandSelect2 = 5;
+RV.State.Block = 100;
+RV.State.Challenge = 101;

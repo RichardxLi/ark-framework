@@ -15,13 +15,11 @@ WindowCommand.prototype.init = function() {
 
 WindowCommand.prototype.createButtons = function() {
     var menu = ["收入+$1", "外援+$2", "政变-$7", "征税*公爵", "刺杀*刺客", "交换*大使", "勒索*队长"];
-    var y = 0;
     for (var i = 0; i < menu.length; i++) {
         var txt = menu[i];
         var bt = new SpriteButton(this._viewport, txt);
         bt.x = 40;
-        bt.y = y;
-        y += 100;
+        bt.y = i*100;
         this._buttons[i] = bt;
     }
 };
@@ -40,13 +38,21 @@ WindowCommand.prototype.update = function(){
     for(var i=0; i<this._buttons.length; i++) {
         this._buttons[i].updateFrame();
     }
+    // 光标设置
+    if(RV.GameData.Temp.commandIndex != 0) {
+        this.set(RV.GameData.Temp.commandIndex);
+        RV.GameData.Temp.commandIndex = 0;
+    }
+    if(RV.GameData.Temp.commandReset) {
+        this.reset();
+        RV.GameData.Temp.commandReset = false;
+    }
     if(this.active==false) return;
     return true;
 };
 //---------------------------------
 // 选择指令
 WindowCommand.prototype._processOK = function() {
-    this.selectCommand = this._index;
-    this.waitInput = false;
+    RV.GameData.Temp.selectCommand = this._index;
+    RV.GameData.Temp.waitInput = false;
 };
-

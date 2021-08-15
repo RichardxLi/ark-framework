@@ -19,11 +19,10 @@ function SpritesetPlayer(viewport, player) {
     };
 
     this.card = function(i) {
-        return _sCard[i];
+        return _sCards[i];
     };
 
     this.update = function() {
-        clearall();
         if(_player==null) {
             return;
         }
@@ -46,6 +45,7 @@ function SpritesetPlayer(viewport, player) {
             _sPlayer = new ISprite(bitmap, _viewport);
             _sPlayer.z = 1;
         }
+        _sPlayer.clearBitmap();
         _sPlayer.drawRect(_sPlayer.GetRect(), playerColor())
         _sPlayer.drawTextQ(_player.name, 20, 30, IColor.Black(), 42);
         _sPlayer.drawTextQ("$"+_player.gold, 20, 130, dollarColor(), 42);
@@ -62,13 +62,6 @@ function SpritesetPlayer(viewport, player) {
             _sCards[i].setCard(_player.hand(i));
         }
         _sCards[i].frameUpdate();
-    };
-
-    var clearall = function() {
-        if(_sPlayer!=null) _sPlayer.clearBitmap;
-        for(var i=0; i<_sCards.length; i++) {
-            if(_sCards[i]!=null) _sCards[i].clearBitmap();
-        }
     };
 
     var playerColor = function() {

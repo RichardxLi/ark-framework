@@ -4,6 +4,7 @@
 function WindowLog(x, y) {
 	 WindowBase.call(this, x, y, 1920, 200);
      this._colorBackgroud = new IColor(150, 150, 240);
+     this.fontSize = 40;
 };
 WindowLog.prototype = new WindowBase();
 WindowLog.prototype.constructor = WindowLog;
@@ -29,6 +30,6 @@ WindowLog.prototype.update = function(){
 WindowLog.prototype.drawLog = function() {
     this.clear();
     if(RV.GameData.Temp.mainLog != "") {
-        this.drawTextEx(RV.GameData.Temp.mainLog, 40, 0, IColor.Black());
+        this.drawTextEx(RV.GameData.Temp.mainLog, 80, 20, IColor.Black());
     }
 };

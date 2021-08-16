@@ -13,8 +13,10 @@ function LogicInputer() {
 
     // 选择指令
     this.command = function() {
-        if(RV.GameData.Core.state != RV.State.TurnInit) return;
-        switch(RV.GameData.Temp.selectCommand) {
+        if(RV.GameData.Core.state != RV.State.TurnStart) return;
+        RV.GameData.Core.command = RV.GameData.Temp.selectCommand;
+        RV.GameData.Temp.selectCommand = 0;
+        switch(RV.GameData.Core.command) {
             case 3:
                 if(me().gold<7) {
                     RV.GameData.Temp.selectCommand = 0;
@@ -38,8 +40,6 @@ function LogicInputer() {
                 RV.GameData.Core.state = RV.State.CommandSelect;
                 commandReq();
         }
-        RV.GameData.Core.command = RV.GameData.Temp.selectCommand;
-        RV.GameData.Temp.selectCommand = 0;
     };
 
     // 选择卡牌
@@ -99,5 +99,10 @@ function LogicInputer() {
             data.card = RV.GameData.Temp.selectCard;
             ISocketClient.sendHost(Protocol.Tcp.MainCommandReq, data);
         }
+    };
+
+    // 自己的信息
+    var me = function() {
+        return RV.GameData.Players.get(RV.GameData.Temp.myIndex);
     };
 };

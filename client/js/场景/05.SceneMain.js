@@ -81,9 +81,9 @@ SceneMain.prototype.updateWindow = function() {
         }
     }
     // 玩家创建
-    if(RV.GameData.Temp.gameSet) {
+    if(RV.GameData.Temp.gameSet && this.wPlayer != null) {
         RV.GameData.Temp.gameSet = false;
-        wPlayer.createPlayers();
+        this.wPlayer.createPlayers();
     }
     this.wLog.update();
     this.wCommand.update();

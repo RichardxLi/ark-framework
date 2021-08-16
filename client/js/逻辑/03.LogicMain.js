@@ -9,6 +9,7 @@ function LogicMain() {
     // 初始化
     this.init = function() {
         isHost = RV.GameData.User.isHost;
+        RV.GameData.Cards.init();
         RV.GameData.Players.init();
         RV.GameData.Deck.init();
         RV.GameData.Core.state = RV.State.GameInit;
@@ -31,6 +32,7 @@ function LogicMain() {
         // 用户设置
         for(var i=0; i<RV.GameData.Players.total(); i++) {
             var p = RV.GameData.Players.list()[i];
+
             if(p.name == RV.GameData.User.name) {
                 RV.GameData.Temp.myIndex = p.index
             }
@@ -76,6 +78,7 @@ function LogicMain() {
     // 指令运算
     this.doCommand = function() {
         if(RV.GameData.Core.state != RV.State.CommandSelect) return;
+        log(RV.GameData.Core.command)
         switch(RV.GameData.Core.command) {
             case 1:
                 this.do100();
@@ -103,6 +106,7 @@ function LogicMain() {
 
     // 收入
     this.do100 = function() {
+        log("do100")
         // 直接结算
         this.process100();
         broadcast100();
@@ -142,6 +146,7 @@ function LogicMain() {
     // -----------------------------------------
     // 指令结算
     this.process100 = function() {
+        log("process100");
         var p = RV.GameData.Core.currentPlayer;
         RV.GameData.Players.get(p).gold += 1;
         RV.GameData.Temp.mainLog = RV.GameData.Players.get(p).name+" 收入 $+1\n";

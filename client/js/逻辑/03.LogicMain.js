@@ -182,10 +182,10 @@ function LogicMain() {
     };
 
     // ------------------------------------------------------------
-    // 挑战
+    // 质疑
     this.challengeReq = function() {
         var t = RV.GameData.Players.get(RV.GameData.Core.challengeTarget);
-        RV.GameData.Temp.mainLog = t.name + " 宣称 " + RV.GameData.Core.challengeLabel + " 等待挑战\w";
+        RV.GameData.Temp.mainLog = t.name + " 宣称 " + RV.GameData.Core.challengeLabel + " 等待质疑\w";
         if(RV.GameData.Core.challengeCurrent == RV.GameData.Temp.myIndex) {
             RV.GameData.Temp.reactLog = RV.GameData.Temp.mainLog;
             RV.GameData.Temp.waitInput = true;

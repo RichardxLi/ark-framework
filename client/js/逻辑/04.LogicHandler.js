@@ -51,7 +51,7 @@ function LogicHandler() {
     //  挑战响应 host处理
     this.challengeRsp = function(data) {
         if(!isHost) return;
-        lMain.processChallenge(data.ok);
+        lMain.doChallenge(data.ok);
     };
 
     // -----------------------------------

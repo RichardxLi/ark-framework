@@ -199,13 +199,13 @@ function LogicMain() {
             // 质疑
         } else {
             // 不质疑
-            RV.GameData.Core.challengeCurrent = next(RV.GameData.Core.challengeCurrent);
-            if(RV.GameData.Core.challengeCurrent == RV.GameData.Core.currentPlayer) {
-                // 质疑结束 无人质疑
-            } else {
-
-            }
         }
+    };
+
+    this.processChallengeOK = function() {
+    };
+
+    this.processChallengeCancel = function() {
     };
 
     var broadcastChallengeReq = function() {

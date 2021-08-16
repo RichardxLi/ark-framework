@@ -23,19 +23,16 @@ RV.GameData = {};
 
 // 标签
 RV.Label = {
-    Duke        : "DUKE",
-    Assassin    : "ASS",
-    Countess    : "CTS",
-    Ambassador  : "AMB",
-    Captain     : "CAP"
+    Duke        : "公爵",
+    Assassin    : "刺客",
+    Countess    : "女伯爵",
+    Ambassador  : "大使",
+    Captain     : "队长"
 };
 
 // 状态机
 RV.State = {};
 RV.State.GameInit = 1;
 RV.State.GameSet = 2;
-RV.State.TurnInit = 3;
+RV.State.TurnStart = 3;
 RV.State.CommandSelect = 4;
-RV.State.CommandSelect2 = 5;
-RV.State.Block = 100;
-RV.State.Challenge = 101;

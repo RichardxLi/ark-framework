@@ -29,7 +29,7 @@ TcpMessage.RoomStart = function() {
     return {};
 };
 
-TcpMessage.MainSetReq = function() {
+TcpMessage.MainInitReq = function() {
     return {};
 };
 
@@ -37,10 +37,22 @@ TcpMessage.MainSetRsp = function() {
     return {po:[], do:[]};
 };
 
-TcpMessage.MainCommand = function() {
+TcpMessage.MainCommandReq = function() {
     return {player:0, command:0, card:0};
 };
 
-TcpMessage.MainDo01 = function() {
-    return {player:0, gold: 0, next:0};
+TcpMessage.MainProcess100 = function() {
+    return {};
+};
+
+TcpMessage.MainProcess300 = function() {
+    return {card:0};
+};
+
+TcpMessage.MainChallengeReq = function() {
+    return {t:0, l:"", c:0};
+};
+
+TcpMessage.MainChallengeRsq = function() {
+    return {ok:false};
 };

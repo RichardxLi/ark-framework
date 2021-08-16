@@ -1,146 +1,69 @@
 /**
- * 输入处理逻辑
- * 所有端端使用
- * 响应本机输入发送请求，响应网络输入更新数据
+ * 网络处理逻辑
  */ 
 function LogicHandler() {
+    var lMain = null;
+    var isHost = false;
+
     // 初始化
-    this.init = function() {
+    this.init = function(l) {
+        lMain = l;
         isHost = RV.GameData.User.isHost;
-        if(!isHost) {
-            RV.GameData.Cards.init();
-            RV.GameData.Players.init();
-            RV.GameData.Deck.init();
-        }
-        RV.GameData.Core.currentPlayer = 1;
-        RV.GameData.Core.state = RV.State.GameInit;
-        RV.GameData.Temp.waitHost = true;
-        ISocketClient.sendHost(Protocol.Tcp.MainSetReq, TcpMessage.MainSetReq());
-        // todo:轮询请求
     };
 
-    // 开局设置
-    this.gamesetHandler = function(data) {
-        if(RV.GameData.Core.state != RV.State.GameInit || !RV.GameData.Temp.waitHost) {
-            return;
-        }
-        RV.GameData.Core.state = RV.State.GameSet;
-        RV.GameData.Temp.waitHost = false;
-        RV.GameData.Players.shuffle(data.po);
-        RV.GameData.Deck.shuffle(data.do);
-        // 用户设置
-        for(var i=0; i<RV.GameData.Players.total(); i++) {
-            var p = RV.GameData.Players.list()[i];
-            if(p.name == RV.GameData.User.name) {
-                RV.GameData.Temp.myIndex = p.index
-            }
-            // 发牌
-            for(var j=0; j<2; j++) {
-                 var c = RV.GameData.Deck.pop();
-                 p.setHand(j, c);
-                 if(p.isSelf()) {
-                    p.hand(j).face = true;
-                 }
-            }
-        }
+    // 初始化请求 host处理
+    this.initReq = function(data) {
+        if(!isHost) return;
+        var rsp = TcpMessage.MainInitRsp();
+        rsp.po = RV.GameData.Core.playerOrder;
+        rsp.do = RV.GameData.Core.deckOrder;
+        ISocketClient.sendGroup(Protocol.Tcp.MainSetRsp, rsp);
     };
 
-    // 回合开始
-    this.turnStart = function() {
-        RV.GameData.Core.state = RV.State.TurnInit;
-        RV.GameData.Temp.selectCommand = 0;
-        RV.GameData.Temp.selectCard = 0;
-        RV.GameData.Temp.selectReact = 0;
-        RV.GameData.Temp.waitInput = false;
-        RV.GameData.Temp.inputMode = false;
-        RV.GameData.Temp.waitHost = false;
-        RV.GameData.Temp.commandReset = true;
-        RV.GameData.Temp.mainLog += currentPlayer().name + " 回合开始\n";
-        if(isMyTurn()) {
-            if(me().gold>=10) {
-                RV.GameData.Temp.mainLog += "资金大于10 强制政变";
-                RV.GameData.Temp.selectCommand = 3;
-                RV.GameData.Temp.commandIndex = 3;
-                return;
-            }
-            RV.GameData.Temp.mainLog += "请选择行动\w";
-            RV.GameData.Temp.waitInput = true;
-            RV.GameData.Temp.inputMode = 1;
-        } else {
-            RV.GameData.Temp.mainLog += "等待行动";
-            RV.GameData.Temp.waitHost = true;
-        }
+    // 初始化响应 guest处理
+    this.initRsp = function(data) {
+        if(isHost) return;
+        if(RV.GameData.Core.state != RV.State.GameInit) return;
+        RV.GameData.Core.playerOrder = data.po;
+        RV.GameData.Core.deckOrder = data.do;
+        lMain.initProcess();
     };
 
-    // 指令选择
-    this.commandSelect = function() {
-        if(RV.GameData.Core.state != RV.State.TurnInit) return;
-        switch(RV.GameData.Temp.selectCommand) {
-            case 3:
-                if(me().gold<7) {
-                    RV.GameData.Temp.selectCommand = 0;
-                    RV.GameData.Temp.waitInput = true;
-                    return;
-                }
-            case 5:
-                if(me().gold<3) {
-                    RV.GameData.Temp.selectCommand = 0;
-                    RV.GameData.Temp.waitInput = true;
-                    return;
-                }
-            case 7:
-                RV.GameData.Players.coupHint();
-                RV.GameData.Temp.waitInput = true;
-                RV.GameData.Temp.inputMode = 2;
-                break;
-            default:
-                commandSend();
-        }
-        RV.GameData.Core.state = RV.State.CommandSelect;
-    }
-
-    // 卡牌选择
-    this.cardSelect = function() {
-        if(RV.GameData.Core.state == RV.State.CommandSelect) {
-            RV.GameData.Core.state = RV.State.CommandSelect2
-            commandSend();
-            return;
-        }
-    }
-
-    // 收入
-    this.do01Handler = function(data) {
-        if(RV.GameData.Core.state != RV.State.TurnInit && 
-            RV.GameData.Core.state != RV.State.CommandSelect) {
-            return;
-        }
-        if(!isHost) {
-            RV.GameData.Players.get(data.player).gold = data.gold;
-            RV.GameData.Core.currentPlayer = data.next;
-        }
-        RV.GameData.Temp.mainLog = RV.GameData.Players.get(data.player).name+" 收入 $+1\n";
-        this.turnStart();
-    }
-
-    var commandSend = function() {
-        var data = TcpMessage.MainCommand();
-        data.player = RV.GameData.Temp.myIndex;
-        data.command = RV.GameData.Temp.selectCommand;
-        data.card = RV.GameData.Temp.selectCard;
-        ISocketClient.sendHost(Protocol.Tcp.MainCommand, data);
-        RV.GameData.Temp.selectCommand = 0;
-        RV.GameData.Temp.selectCard = 0;
-    }
-
-    var isMyTurn = function() {
-        return RV.GameData.Core.currentPlayer == RV.GameData.Temp.myIndex;
+    // 命令请求 host处理
+    this.commandReq = function(data) {
+        if(!isHost) return;
+        if(data.player != RV.GameData.Core.currentPlayer) return;
+        RV.GameData.Core.command = data.command;
+        RV.GameData.Core.commandCard = data.card;
+        RV.GameData.Core.state = RV.State.GameInit.CommandSelect;
+        lMain.doCommand();
     };
 
-    var currentPlayer = function() {
-        return RV.GameData.Players.get(RV.GameData.Core.currentPlayer);
+    // 挑战请求 guest处理
+    this.challengeReq = function(data) {
+        if(isHost) return;
+        RV.GameData.Core.challengeTarget = data.t;
+        RV.GameData.Core.challengeLabel = data.l;
+        RV.GameData.Core.challengeCurrent = data.c;
+        lMain.challengeReq();
     };
 
-    var me = function() {
-        return RV.GameData.Players.get(RV.GameData.Temp.myIndex);
-    }
+    //  挑战响应 host处理
+    this.challengeRsp = function(data) {
+        if(!isHost) return;
+        lMain.processChallenge(data.ok);
+    };
+
+    // -----------------------------------
+    // 指令结算 guest处理
+    this.process100 = function(data) {
+        if(isHost) return;
+        lMain.process100();
+    };
+
+    this.process300 = function(data) {
+        if(isHost) return;
+        RV.GameData.Core.commandCard = data.card;
+        lMain.process300();
+    };
 };

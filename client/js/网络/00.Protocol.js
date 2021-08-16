@@ -22,8 +22,11 @@ Protocol.Tcp.RoomInfo = "room.info";
 Protocol.Tcp.RoomRejoin = "room.rejoin";
 Protocol.Tcp.RoomClose = "room.close";
 Protocol.Tcp.RoomStart = "room.start";
-Protocol.Tcp.MainSetReq = "main.gameset";
-Protocol.Tcp.MainSetRsp = "handler.gameset";
-Protocol.Tcp.MainCommand = "main.command";
-Protocol.Tcp.MainDo01 = "handler.do01";
+Protocol.Tcp.MainInitReq = "handler.initReq";
+Protocol.Tcp.MainInitRsp = "handler.initRsp";
+Protocol.Tcp.MainCommandReq = "handler.commandReq";
+Protocol.Tcp.MainChallengeReq = "handler.challengeReq";
+Protocol.Tcp.MainChallengeRsq = "handler.challengeRsq";
+Protocol.Tcp.MainProcess100 = "handler.process100";
+Protocol.Tcp.MainProcess300 = "handler.process300";
 

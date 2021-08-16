@@ -3,8 +3,9 @@
  */
 function SceneMain() {
     SceneBase.call(this);
-    this.lMain = null;      // 主流程处理 仅host
-    this.lHandler = null;   // 输入处理
+    this.lMain = null;      // 主流程逻辑
+    this.lHandler = null;   // 网络输入逻辑
+    this.lInputer = null;     // 本机输入逻辑
 
     this.wLog = null;       // 信息窗体
     this.wCommand = null;   // 指令窗体
@@ -27,41 +28,17 @@ SceneMain.prototype.init = function() {
 SceneMain.prototype.update = function() {
     SceneBase.prototype.update.call(this);
     this.updateWindow();
-    
-    // 窗口活动判断
-    this.wCommand.active = false;
-    this.wPlayer.active = false;
-    this.wReation.active = false;
-    if(RV.GameData.Temp.waitInput) {
-        var inputMode = RV.GameData.Temp.inputMode;
-        if(inputMode == 1) {
-            this.wCommand.active = true;
-        } else if (inputMode == 2) {
-            this.wPlayer.active = true;
-        } else if (inputMode == 3) {
-            this.wReation.open();
-            this.wReation.reset();
-            this.wReation.active = true;
-        }
-    }
-
-    // 指令输入
-    if(RV.GameData.Temp.selectCommand != 0) {
-        this.lHandler.commandSelect();
-    }
-    if(RV.GameData.Temp.selectCard != 0) {
-        this.lHandler.cardSelect();
-    }
-
-
+    this.updateInput();
 };
 
 // 逻辑初始化
 SceneMain.prototype.initLogic = function() {
     this.lMain = new LogicMain();
     this.lMain.init();
+    this.lInputer = new LogicInputer();
+    this.lInputer.init(this.lMain);
     this.lHandler = new LogicHandler();
-    this.lHandler.init();
+    this.lHandler.init(this.lMain);
 };
 
 // 精灵初始化
@@ -87,33 +64,77 @@ SceneMain.prototype.initWindow = function() {
 
 // 窗体刷新
 SceneMain.prototype.updateWindow = function() {
+    // 活动判断
+    this.wCommand.active = false;
+    this.wPlayer.active = false;
+    this.wReation.active = false;
+    if(RV.GameData.Temp.waitInput) {
+        var inputMode = RV.GameData.Temp.inputMode;
+        if(inputMode == 1) {
+            this.wCommand.active = true;
+        } else if (inputMode == 2) {
+            this.wPlayer.active = true;
+        } else if (inputMode == 3) {
+            this.wReation.open();
+            this.wReation.reset();
+            this.wReation.active = true;
+        }
+    }
+    // 玩家创建
+    if(RV.GameData.Temp.gameSet) {
+        RV.GameData.Temp.gameSet = false;
+        wPlayer.createPlayers();
+    }
     this.wLog.update();
     this.wCommand.update();
     this.wPlayer.update();
     this.wReation.update();
 };
 
+// 输入刷新
+SceneMain.prototype.updateInput = function() {
+    if(RV.GameData.Temp.selectCommand != 0) {
+        this.lInputer.command();
+    }
+    if(RV.GameData.Temp.selectCard != 0) {
+        this.lInputer.card();
+    }
+    if(RV.GameData.Temp.selectReact != 0) {
+        this.lInputer.reaction();
+    }
+}
+
 // 网络消息
 SceneMain.prototype.netHandler = function(router, data) {
-    if(this.lMain==null || this.lHandler==null) {
+    if(this.lHandler==null) {
         return;
     }
-    if(router==Protocol.Tcp.MainSetReq) {
-        this.lMain.gamesetHandler(data);
+    if(router==Protocol.Tcp.MainInitReq) {
+        this.lHandler.initReq(data);
         return;
     }
-    if(router==Protocol.Tcp.MainSetRsp) {
-        this.lHandler.gamesetHandler(data);
-        this.wPlayer.createPlayers();
-        this.lHandler.turnStart();
+    if(router==Protocol.Tcp.MainInitRsp) {
+        this.lHandler.initRsp(data);
         return;
     }
-    if(router==Protocol.Tcp.MainCommand) {
-        this.lMain.commandHandler(data);
+    if(router==Protocol.Tcp.MainCommandReq) {
+        this.lHandler.commandReq(data);
         return;
     }
-    if(router==Protocol.Tcp.MainDo01) {
-        this.lHandler.do01Handler(data);
+    if(router==Protocol.Tcp.MainChallengeReq) {
+        this.lHandler.challengeReq(data);
+        return;
+    }
+    if(router==Protocol.Tcp.MainChallengeRsq) {
+        this.lHandler.challengeRsq(data);
+        return;
+    }
+    if(router==Protocol.Tcp.MainProcess100) {
+        this.lHandler.process100(data);
+        return;
+    }
+    if(router==Protocol.Tcp.MainProcess300) {
+        this.lHandler.process300(data);
         return;
     }
 };

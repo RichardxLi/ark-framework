@@ -48,10 +48,10 @@ WindowReaction.prototype.drawLog = function() {
     if(RV.GameData.Temp.reactLog != "") {
         this.drawTextEx(RV.GameData.Temp.reactLog, 80, 20, IColor.Black());
     }
-    if(RV.GameData.Core.state == RV.State.Block) {
+    if(RV.GameData.Temp.reactMode == 1) {
         this._buttons[0].setTitle("阻挡");
         this._buttons[1].setTitle("不阻挡");
-    } else if (RV.GameData.Core.state == RV.State.Challenge) {
+    } else if (RV.GameData.Temp.reactMode == 2) {
         this._buttons[0].setTitle("质疑");
         this._buttons[1].setTitle("不质疑");
     }

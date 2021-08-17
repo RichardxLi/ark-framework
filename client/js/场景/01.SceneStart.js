@@ -53,7 +53,7 @@ SceneStart.prototype.update = function() {
         this.logo.setOnEndFade(function(){
             __logo.fadeTo(0.01,80)
             __logo.setOnEndFade(function(){
-                IVal.scene.goto(new SceneLogin())
+                IVal.scene.goto(new SceneTest())
             })
         });
     }

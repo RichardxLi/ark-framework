@@ -1,7 +1,9 @@
 /** 
  * 数据库-样例
  */
-function DataObject() {
-    this.id = 0;
-    this.picture = "";
-};
+class DataObject {
+    constructor() {
+        this.id = 0;
+        this.picture = "";
+    }
+}

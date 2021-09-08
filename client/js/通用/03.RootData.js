@@ -18,4 +18,4 @@ RD.Object = function(id) {
 
 // ----------------------
 // TEST
-RD._objects[1] = {id:1, picture:"demo/1.jpg"};
+RD._objects[1] = {id:1, picture:"demo/1.png"};

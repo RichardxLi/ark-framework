@@ -64,9 +64,6 @@ RF.LoadDatabase = function() {
  * 初始化游戏数据
  */ 
 RF.InitGameData = function() {
-    RV.GameData.User = new GameUser();
-    RV.GameData.Lobby = new GameLobby();
-    RV.GameData.Room = new GameRoom();
 };
 
 /**

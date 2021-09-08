@@ -3,29 +3,34 @@
  * @param viewport  所属视窗
  * @param txt       文本
  */
-function SpriteButton(viewport, txt) {
-    var _bmp1 = RF.LoadCache("../System/button-menu_0.png");
-    var _bmp2 = RF.LoadCache("../System/button-menu_1.png");
-    IButton.call(this, _bmp1, _bmp2, " ", viewport, false);
-    var _title = txt;
+class SpriteButton extends IButton {
+    constructor(viewport, txt) {
+        let bmp1 = RF.LoadCache("../System/button-menu_0.png");
+        let bmp2 = RF.LoadCache("../System/button-menu_1.png");
+        super(bmp1, bmp2, " ", viewport, false);
+        this._bmp1 = bmp1;
+        this._bmp2 = bmp2;
+        this.title = txt;
+    }
 
-    // 刷新
-    this.frameUpdate = function() {
-        this.drawTitleQ(_title, IColor.Black(), 32);
-    };
+    update() {
+        super.update();
+        this.updateBasic();
+    }
 
-    // 设置文本
-    this.setTitle = function(txt) {
-        _title = txt;
-    };
+    updateBasic() {
+        this.drawTitleQ(this.title, IColor.Black(), 32);
+    }
 
-    // 焦点处理
-    this.doFocus = function() {
-        this.setBitmap(_bmp2, _bmp1);
-    };
+    doFocus() {
+        this.setBitmap(this._bmp2, this._bmp1);
+    }
 
-    // 失去焦点处理
-    this.doUnfocus = function() {
-        this.setBitmap(_bmp1, _bmp2);
-    };
-};
+    cancelFocus() {
+        this.setBitmap(this._bmp1, this._bmp2);
+    }
+
+    dispose() {
+        super.disposeMin();
+    }
+}

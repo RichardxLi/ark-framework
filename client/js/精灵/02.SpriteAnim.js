@@ -86,7 +86,7 @@ class SpriteAnim extends ISprite {
                         this.scaleTo(action.zoomX / 100,action.zoomY / 100,action.zoomTime);
                     }
                     if(action.isFlash){
-                        RV.NowCanvas.flash(new IColor(action.color[0],action.color[1],action.color[2],action.color[3]),action.flashTime);
+                        this.flash(new IColor(action.color[0],action.color[1],action.color[2],action.color[3]),action.flashTime);
                     }
                     if(this.isSingle){
                         this.doList.push(this.animationIndex + 1);
@@ -129,8 +129,8 @@ class SpriteAnim extends ISprite {
                     x = rect.right - (animation.width * this.zoomX);
                     y = rect.y + (rect.height) / 2;
                 }else if(point.dir === 5){//画面
-                    x = RV.NowProject.gameWidth / 2;
-                    y = RV.NowProject.gameHeight / 2;
+                    x = RD.Project.gameWidth / 2;
+                    y = RD.Project.gameHeight / 2;
                 }
                 if(this.animationIndex >= 0 && this.animationIndex < this.data.anims.length){
                     x += this.data.anims[this.animationIndex].dx;

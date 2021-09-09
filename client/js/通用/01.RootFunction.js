@@ -8,7 +8,7 @@ function RF(){}
  * @param path 图片地址
  */
 RF.LoadBitmap = function(path){
-    return IBitmap.WBitmap("Graphics/Picture/" + path);
+    return IBitmap.WBitmap("Graphics/" + path);
 };
 
 /**
@@ -50,20 +50,6 @@ RF.DefaultBitmap = function() {
         RV.Default = new IBitmap.CBitmap(1,1);
     }
     return RV.Default;
-};
-
-
-/**
- *  加载数据库
- */ 
-RF.LoadDatabase = function() {
-    RD.LoadObjects();
-};
-
-/**
- * 初始化游戏数据
- */ 
-RF.InitGameData = function() {
 };
 
 /**

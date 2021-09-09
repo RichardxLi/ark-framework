@@ -5,6 +5,8 @@
 class SceneStart extends SceneBase {
     constructor() {
         super();
+        this.load = 0;
+        this.need = 2;
         // logo<ISprite>
         this.logo = null;
     }
@@ -12,9 +14,7 @@ class SceneStart extends SceneBase {
     init() {
         super.init();
         // 加载数据库
-        RF.LoadDatabase();
-        // 数据初始化
-        RF.InitGameData();
+        this.loadDatabase();
 
         // 设置logo
         let logoBmp = RF.LoadBitmap("game_logo.png");
@@ -40,7 +40,14 @@ class SceneStart extends SceneBase {
     }
 
     update() {
-        super.update()
+        super.update();
+        if(this.load < this.need) {
+            return;
+        }
+
+        // 数据初始化
+        this.initGameData();
+        // 跳转
         if(this.logo.opacity==0) {
             this.logo.fadeTo(1, 60);
             let logo = this.logo;
@@ -51,5 +58,17 @@ class SceneStart extends SceneBase {
                 })
             });
         }
+    }
+
+    loadDatabase() {
+        let _sf = this;
+        RD.LoadObjects();
+        RD.LoadSet(function(){_sf.load += 1});
+        RD.LoadProject(function(){_sf.load += 1});
+    }
+
+    initGameData() {
+        RV.GameData.Set = new GameSet();
+        RV.GameData.Set.load();
     }
 }

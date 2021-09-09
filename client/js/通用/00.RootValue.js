@@ -7,8 +7,8 @@ function RV(){}
 RV.System = {};
 RV.System.Platform = "PC";
 RV.System.Version = "EA 1.0.0"
-RV.System.Width = 1920;
-RV.System.Height = 1080;
+RV.System.Width = 960;
+RV.System.Height = 540;
 RV.System.Debug = true;
 
 // 缓存

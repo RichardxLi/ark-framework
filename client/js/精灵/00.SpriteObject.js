@@ -9,7 +9,7 @@ class SpriteObject extends ISprite {
         this._obj = object;
         // 精灵绑定数据
         if(this._obj != null) {
-            let bitmap = RF.LoadCache(this._obj.picture);
+            let bitmap = RF.LoadCache("Picture/"+this._obj.picture);
             this.setBitmap(bitmap);
         }
     }

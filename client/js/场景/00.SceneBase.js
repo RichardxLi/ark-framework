@@ -4,12 +4,14 @@
  */
 class SceneBase {
     constructor() {
-        // 准备完毕
-        this.ready = false;
+        // 场景启动
+        this.start = false;
         // 加载中
         this.loading = false;
         // 背景精灵 <ISprite>
         this.background = null;
+        // 动画
+        this.anims = [];
     }
 
     update() {
@@ -21,12 +23,19 @@ class SceneBase {
         // 加载中 - 不执行循环
         if(this.loading) return;
 
-        // 未就绪 - 初始化场景
-        if(!this.ready) {
+        // 初始化场景
+        if(!this.start) {
             this.loading = true;
+            this.start = true;
             if(this.init()) {
-                this.ready = true;
                 this.loading = false;
+            }
+            return;
+        }
+
+        for(let i=0; i<this.anims.length; i++) {
+            if(this.anims[i]!=null) {
+                this.anims[i].updateBase();
             }
         }
     }
@@ -55,5 +64,30 @@ class SceneBase {
     goto(scene, transform=true) {
         this.dispose();
         IVal.scene = scene;
+    }
+
+    // 播放预设动画
+    playAnim(id, rect, endFunc) {
+        let _sf = this;
+        let data = RD.Set.findResAnim(id);
+        let sa = null;
+        if(data instanceof DResAnimFrame) {
+            sa = new SpriteAnim(this.background.viewport, id, rect, true);
+        }
+        if(sa === null) {
+            if(endFunc != null) {
+                endFunc();
+            }
+            return;
+        }
+        sa.endDo = function() {
+            sa.disposeMin();
+            _sf.anims.remove(sa)
+            if(endFunc != null) {
+                endFunc();
+            }
+        }
+        this.anims.push(sa);
+        return sa;
     }
 }
